@@ -1,5 +1,4 @@
 import numpy
-import matplotlib.pyplot as plt
 import scipy
 from scipy import optimize
 
@@ -19,12 +18,13 @@ def Legendre(n,x):
 def nodes(n):
     def Pn(x):
         return Legendre(n, x)
+    error_tol = 1e-5
     x0 = numpy.linspace(-0.99,0.99,2*n)                          #Array of initial guesses
-    sol = scipy.optimize.root(Pn, x0, tol=1e-5 )                             #Finds roots of Pn
+    sol = scipy.optimize.root(Pn, x0, tol=error_tol )                             #Finds roots of Pn
     unique = numpy.unique(sol.x, axis=0)                           #Gets rid of duplicate nodes
     ret = []
     for i in unique:
-        if all(numpy.abs(i - existing_root) > 1e-5 for existing_root in ret):
+        if all(numpy.abs(i - existing_root) > error_tol for existing_root in ret):
             ret.append(i)
     return ret
 
@@ -63,11 +63,11 @@ def gauss(a,b ,nodesandweights):
 
 a= -1
 b = 1           #change the interval of integration (a,b) here
-n=5        #Change the degree of N here
+n= 5      #Change the degree of N here
 xi = nodes(n)
 w = weights(xi, n)
 export(xi,w)
 
 nodesandweights = extract()
 gaussresult = gauss(a,b,nodesandweights)
-print("I =",gaussresult, "for e^x")
+print("I =",gaussresult)
